@@ -478,7 +478,7 @@ Estado atual das decisões, com os números da base atual (115 municípios, dado
 
   O modelo erra de 25% a 33% menos que repetir os casos da última semana confirmada. A faixa de 80% contém o valor real em 75% a 79% das semanas: um pouco estreita, mais nas antecedências maiores (com o modelo de quantis anterior, sem clima, eram 78% a 82%, com erro igual ou um pouco maior; decisão 18).
 * **Avaliação no painel:** quadradinhos e casos previstos de cada município, feitos como o painel os faria (2 semanas de atraso, modelos que não viram o município), e as tabelas gerais de mobilização, desmobilização, nível, casos e efeito do atraso (0 a 4 semanas), com intervalos de confiança. O acerto de cada município é calculado no navegador a partir das previsões exportadas.
-* **Em aberto:** a seção Ajuda, que depende das definições restantes. O painel anterior, em Streamlit, foi removido (decisão 13).
+* **Resumo e Ajuda:** a aba Resumo mostra a situação do município em linguagem simples, para a população (nível, alerta, tendência dos casos e cuidados contra a dengue, com fonte do Ministério da Saúde); a Ajuda explica as abas, os níveis, as previsões e os alertas. O painel anterior, em Streamlit, foi removido (decisão 13).
 
 ### 18. Um modelo só para os casos e os níveis
 
