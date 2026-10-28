@@ -1,4 +1,5 @@
-import { el, seloNivel } from './formato';
+import type { Nivel } from './dados';
+import { DESCRICAO_NIVEL, el, seloNivel, SIGNIFICADO_NIVEL } from './formato';
 
 // Esboço: o conteúdo completo depende das definições ainda em discussão
 export function renderAjuda(alvo: HTMLElement): void {
@@ -9,10 +10,8 @@ export function renderAjuda(alvo: HTMLElement): void {
     secao('Como ler o painel',
       el('p', {}, 'O painel mostra, para cada município, em que nível a dengue está e em que nível deve estar nas ' +
         'próximas semanas, para ajudar a decidir quando mobilizar, manter e desmobilizar recursos.'),
-      el('ul', {},
-        el('li', {}, seloNivel(0), ' normal: abaixo do limiar pré-epidêmico.'),
-        el('li', {}, seloNivel(1), ' elevado: entre os limiares pré-epidêmico e epidêmico.'),
-        el('li', {}, seloNivel(2), ' epidêmico: acima do limiar epidêmico.'))),
+      el('ul', {}, ...([0, 1, 2] as Nivel[]).map((nv) =>
+        el('li', {}, seloNivel(nv), ` ${DESCRICAO_NIVEL[nv]}: ${SIGNIFICADO_NIVEL[nv]}.`)))),
     secao('Por que o nível "confirmado" é de 2 semanas atrás',
       el('p', {}, 'As notificações de uma semana continuam chegando por várias semanas. Por isso, o painel usa como ' +
         'base a última semana com dados quase completos; as duas mais recentes aparecem no gráfico com a estimativa ' +

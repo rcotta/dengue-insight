@@ -98,7 +98,8 @@ select, input {
 .card h4 { margin: 20px 0 6px; font-size: 0.95rem; }
 .card p { margin: 6px 0; }
 .card .valor { font-size: 1.6rem; font-weight: 650; margin: 4px 0; font-variant-numeric: tabular-nums; }
-.card .destaque { margin-bottom: 4px; }
+.card .destaque { margin-bottom: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.card .descricao { color: var(--tinta-sec); }
 .card.alerta.ativo { border-color: var(--vermelho); box-shadow: inset 4px 0 0 var(--vermelho); }
 .nota { color: var(--tinta-sec); font-size: 0.85rem; }
 .nota.cuidado { color: var(--texto-amarelo); }
@@ -118,6 +119,7 @@ select, input {
 
 dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; margin: 8px 0; }
 dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+dd .explica { display: block; white-space: normal; color: var(--tinta-sec); font-size: 0.85rem; }
 
 .tabela-rolagem { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
