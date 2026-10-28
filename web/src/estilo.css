@@ -161,6 +161,14 @@ table.previsoes.vertical .selo { font-size: 0.8rem; padding: 2px 8px; gap: 4px; 
   outline: 1px solid var(--verde); outline-offset: -1px; width: 12px; }
 .chave.faixa-azul { height: 12px; border: 0; background: var(--azul-faixa); border-radius: 2px; }
 
+.resumo .niveis { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 4px 0 12px; }
+.resumo .niveis > div { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.resumo .niveis .selo { font-size: 1.15rem; padding: 6px 16px; }
+.resumo .frase { font-size: 1.1rem; }
+.resumo .tendencia { display: flex; align-items: baseline; gap: 10px; font-size: 1.05rem; }
+.resumo .seta { font-size: 1.6rem; line-height: 1; color: var(--tinta-sec); }
+a { color: var(--azul); }
+
 .texto ul { padding-left: 20px; }
 .texto li { margin: 6px 0; }
 
