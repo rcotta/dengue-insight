@@ -100,6 +100,7 @@ select, input {
 .card .valor { font-size: 1.6rem; font-weight: 650; margin: 4px 0; font-variant-numeric: tabular-nums; }
 .card .destaque { margin-bottom: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .card .descricao { color: var(--tinta-sec); }
+.card .proximo { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grade); }
 .card.alerta.ativo { border-color: var(--vermelho); box-shadow: inset 4px 0 0 var(--vermelho); }
 .nota { color: var(--tinta-sec); font-size: 0.85rem; }
 .nota.cuidado { color: var(--texto-amarelo); }

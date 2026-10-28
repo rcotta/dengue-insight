@@ -13,12 +13,15 @@ function card(titulo: string, classe: string, ...conteudo: (Node | string | null
 function cardConfirmado(m: Municipio): HTMLElement {
   const c = m.confirmada;
   const dias = Math.round((Date.now() - data(c.semana).getTime()) / 86_400_000);
+  // O confirmado é de 2 semanas atrás: o nível desta semana já é previsão (o mesmo rótulo da tabela)
+  const atual = m.previsoes.find((p) => p.antecedencia === 0);
   return card('Último nível confirmado', 'confirmado',
     el('div', { class: 'destaque' }, seloNivel(c.nivel),
       c.nivel != null && el('span', { class: 'descricao' }, DESCRICAO_NIVEL[c.nivel])),
     el('p', { class: 'valor' }, `${n(c.casos)} casos`),
     el('p', {}, `Semana ${diaMes(c.semana)}; há ${dias}d`),
-    el('p', { class: 'nota' }, 'Semana mais recente com dados quase completos: as notificações levam semanas para chegar.'));
+    el('p', { class: 'nota' }, 'Semana mais recente com dados quase completos: as notificações levam semanas para chegar.'),
+    atual != null && el('p', { class: 'proximo' }, 'Esta semana (previsão): ', seloNivel(atual.nivel)));
 }
 
 function cardAlerta(m: Municipio): HTMLElement {
