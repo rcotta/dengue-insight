@@ -4,9 +4,11 @@ import { renderAvaliacao } from './avaliacao';
 import { carregarAvaliacao, carregarIndice, carregarMunicipio, type Indice } from './dados';
 import { el } from './formato';
 import { renderIndicadores } from './indicadores';
+import { renderResumo } from './resumo';
 
-type Secao = 'indicadores' | 'avaliacao' | 'ajuda';
-const SECOES: [Secao, string][] = [['indicadores', 'Indicadores'], ['avaliacao', 'Avaliação'], ['ajuda', 'Ajuda']];
+type Secao = 'indicadores' | 'resumo' | 'avaliacao' | 'ajuda';
+const SECOES: [Secao, string][] = [['indicadores', 'Indicadores'], ['resumo', 'Resumo'], ['avaliacao', 'Avaliação'],
+  ['ajuda', 'Ajuda']];
 const MUNICIPIO_PADRAO = 'campinas';
 const CHAVE_AVISO = 'dengue_insight_aviso';
 const PALAVRA_ACEITE = 'entendo';
@@ -60,6 +62,7 @@ async function mostrar(): Promise<void> {
     else {
       const [m, av] = await Promise.all([carregarMunicipio(municipio), carregarAvaliacao()]);
       if (secao === 'indicadores') renderIndicadores(conteudo, m, indice);
+      else if (secao === 'resumo') renderResumo(conteudo, m, indice);
       else renderAvaliacao(conteudo, m, av);
     }
     conteudo.setAttribute('aria-busy', 'false');

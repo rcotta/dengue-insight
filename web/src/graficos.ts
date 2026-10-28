@@ -33,6 +33,27 @@ function mesAno(d: Date): string {
 ${d.getFullYear()}` : mes;
 }
 
+// Início de cada mês dentro do domínio: traços na faixa de níveis e grade fina no gráfico de casos
+function meses([ini, fim]: [Date, Date]): Date[] {
+  const lista: Date[] = [];
+  for (let d = new Date(ini.getFullYear(), ini.getMonth() + 1, 1); d <= fim; d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) {
+    lista.push(d);
+  }
+  return lista;
+}
+
+// Rótulo a cada mês em 6 meses e 1 ano; a cada trimestre em 2 anos ou no celular, para não amontoar.
+// O ano aparece em janeiro e no primeiro rótulo, para situar períodos que não passam por janeiro.
+function rotulosMeses(lista: Date[], espacado: boolean): Map<number, string> {
+  const rotulos = new Map<number, string>();
+  for (const d of lista.filter((x) => !espacado || x.getMonth() % 3 === 0)) {
+    const mes = d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+    rotulos.set(d.getTime(), d.getMonth() === 0 || rotulos.size === 0 ? `${mes}
+${d.getFullYear()}` : mes);
+  }
+  return rotulos;
+}
+
 function eixoY(log: boolean) {
   return log
     ? { type: 'log' as const, label: 'Casos por semana (escala logarítmica)', grid: true, tickFormat: (v: number) => n(v),
@@ -48,13 +69,14 @@ export function graficoCasos(m: Municipio, semanas: number, log: boolean): Eleme
   const ini = Math.max(0, m.serie.semana.length - semanas);
   const dominio: [Date, Date] = [data(m.serie.semana[ini]),
     data(somarSemanas(m.previsoes[m.previsoes.length - 1].semana, 1))];
+  const marcas = meses(dominio);
   const div = document.createElement('div');
-  div.append(linhaCasos(m, ini, dominio, log), faixaNiveis(m, ini, dominio));
+  div.append(linhaCasos(m, ini, dominio, log, marcas), faixaNiveis(m, ini, dominio, marcas, semanas));
   return div;
 }
 
 /** Casos das últimas semanas, semanas incompletas, previsão com faixa de 80% e limiares. */
-function linhaCasos(m: Municipio, ini: number, dominio: [Date, Date], log: boolean): Element {
+function linhaCasos(m: Municipio, ini: number, dominio: [Date, Date], log: boolean, marcas: Date[]): Element {
   const c = cores();
   const s = m.serie;
   const total = s.semana.length;
@@ -85,6 +107,7 @@ function linhaCasos(m: Municipio, ini: number, dominio: [Date, Date], log: boole
     x: { type: 'time', domain: dominio, axis: null },
     y: eixoY(log),
     marks: [
+      Plot.ruleX(marcas, { stroke: c.grade, strokeWidth: 1 }),
       Plot.areaY(prev, { x: 'semana', y1: 'inf', y2: 'sup', fill: c.faixa, curve: 'monotone-x' }),
       Plot.line(amarelo, { x: 'semana', y: 'valor', stroke: c.nivel[1], strokeWidth: 1.5, strokeDasharray: '5,4',
         curve: 'step-after' }),
@@ -109,7 +132,7 @@ function linhaCasos(m: Municipio, ini: number, dominio: [Date, Date], log: boole
 /** Faixa com o nível de cada semana: cheio nas confirmadas, hachurado nas previstas (nível mais provável).
  * As semanas incompletas sem previsão ficam em branco. Um triângulo no eixo marca a última semana confirmada,
  * de onde partem as previsões. */
-function faixaNiveis(m: Municipio, ini: number, dominio: [Date, Date]): Element {
+function faixaNiveis(m: Municipio, ini: number, dominio: [Date, Date], marcas: Date[], semanas: number): Element {
   const c = cores();
   const meiaSemana = 3.5 * 86_400_000; // a célula fica centrada no ponto da semana, como na linha
   const celula = (sem: string, nivel: Nivel, previsto: boolean) => {
@@ -123,6 +146,7 @@ function faixaNiveis(m: Municipio, ini: number, dominio: [Date, Date]): Element 
   });
   const previstas = m.previsoes.map((p) => celula(p.semana, p.nivel, true));
   const id = `hachura-${++faixas}`;
+  const rotulos = rotulosMeses(marcas, semanas > 52 || largura() < 640);
   const svg = Plot.plot({
     width: largura(),
     height: 30 + 34,
@@ -131,7 +155,8 @@ function faixaNiveis(m: Municipio, ini: number, dominio: [Date, Date]): Element 
     marginTop: 4,
     marginBottom: 36,
     style: { background: 'transparent', color: c.tintaSec, fontSize: '12px' },
-    x: { type: 'time', label: null, domain: dominio, tickFormat: mesAno, tickSize: 0, tickPadding: 16 },
+    x: { type: 'time', label: null, domain: dominio, ticks: marcas, tickFormat: (d: Date) => rotulos.get(d.getTime()) ?? '',
+      tickSize: 4, tickPadding: 12 },
     y: { domain: ['Nível'], label: null, padding: 0.12 },
     color: { type: 'ordinal', domain: [0, 1, 2], range: c.nivel },
     marks: [

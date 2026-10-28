@@ -98,7 +98,9 @@ select, input {
 .card h4 { margin: 20px 0 6px; font-size: 0.95rem; }
 .card p { margin: 6px 0; }
 .card .valor { font-size: 1.6rem; font-weight: 650; margin: 4px 0; font-variant-numeric: tabular-nums; }
-.card .destaque { margin-bottom: 4px; }
+.card .destaque { margin-bottom: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.card .descricao { color: var(--tinta-sec); }
+.card .proximo { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grade); }
 .card.alerta.ativo { border-color: var(--vermelho); box-shadow: inset 4px 0 0 var(--vermelho); }
 .nota { color: var(--tinta-sec); font-size: 0.85rem; }
 .nota.cuidado { color: var(--texto-amarelo); }
@@ -118,6 +120,7 @@ select, input {
 
 dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; margin: 8px 0; }
 dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+dd .explica { display: block; white-space: normal; color: var(--tinta-sec); font-size: 0.85rem; }
 
 .tabela-rolagem { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
@@ -157,6 +160,14 @@ table.previsoes.vertical .selo { font-size: 0.8rem; padding: 2px 8px; gap: 4px; 
 .chave.quadrados.hachurado { background: repeating-linear-gradient(45deg, var(--verde) 0 2px, transparent 2px 4px);
   outline: 1px solid var(--verde); outline-offset: -1px; width: 12px; }
 .chave.faixa-azul { height: 12px; border: 0; background: var(--azul-faixa); border-radius: 2px; }
+
+.resumo .niveis { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 4px 0 12px; }
+.resumo .niveis > div { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.resumo .niveis .selo { font-size: 1.15rem; padding: 6px 16px; }
+.resumo .frase { font-size: 1.1rem; }
+.resumo .tendencia { display: flex; align-items: baseline; gap: 10px; font-size: 1.05rem; }
+.resumo .seta { font-size: 1.6rem; line-height: 1; color: var(--tinta-sec); }
+a { color: var(--azul); }
 
 .texto ul { padding-left: 20px; }
 .texto li { margin: 6px 0; }

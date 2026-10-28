@@ -1,10 +1,13 @@
 import type { Nivel } from './dados';
 
 export const NOMES_NIVEL: Record<Nivel, string> = { 0: 'Verde', 1: 'Amarelo', 2: 'Vermelho' };
-export const DESCRICAO_NIVEL: Record<Nivel, string> = {
-  0: 'normal',
-  1: 'elevado (acima do limiar pré-epidêmico)',
-  2: 'epidêmico (acima do limiar epidêmico)',
+// Vocabulário único: a cor no selo e estes nomes nos textos (os mesmos dos limiares)
+export const DESCRICAO_NIVEL: Record<Nivel, string> = { 0: 'normal', 1: 'pré-epidêmico', 2: 'epidêmico' };
+// O que cada nível quer dizer, em linguagem simples (limiares do MEM de cada município)
+export const SIGNIFICADO_NIVEL: Record<Nivel, string> = {
+  0: 'casos no patamar habitual do município fora das epidemias',
+  1: 'casos acima do habitual, sinal de que a temporada de transmissão começou',
+  2: 'casos no patamar das epidemias dos anos anteriores',
 };
 export const CLASSE_NIVEL: Record<Nivel, string> = { 0: 'verde', 1: 'amarelo', 2: 'vermelho' };
 // Ícone junto da cor: o nível nunca depende só da cor
