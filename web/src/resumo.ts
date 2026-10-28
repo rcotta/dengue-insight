@@ -1,5 +1,5 @@
 import type { Indice, Municipio } from './dados';
-import { DESCRICAO_NIVEL, diaMes, el, n, pct, periodoSemana, seloNivel, SIGNIFICADO_NIVEL } from './formato';
+import { CLASSE_NIVEL, DESCRICAO_NIVEL, diaMes, el, n, pct, periodoSemana, seloNivel, SIGNIFICADO_NIVEL } from './formato';
 
 // Visão para a população: linguagem simples, sem limiares, quantis nem faixa de 80%
 
@@ -38,34 +38,35 @@ function fraseTendencia(m: Municipio): HTMLElement {
       `${aprox(depois.casos)} por semana em ${diaMes(depois.semana)}.`));
 }
 
+// Faixa das próximas semanas: um bloco por semana, com a cor do nível previsto
+function semanas(m: Municipio): HTMLElement {
+  const rotulo = (h: number) => (h === 0 ? 'Esta semana' : `Em ${h} semana${h > 1 ? 's' : ''}`);
+  return el('ol', { class: 'semanas', 'aria-label': 'Nível previsto por semana' }, ...m.previsoes.map((p) =>
+    el('li', { class: `semana ${CLASSE_NIVEL[p.nivel]}` },
+      el('span', { class: 'quando' }, rotulo(p.antecedencia)),
+      el('span', { class: 'sub' }, periodoSemana(p.semana)),
+      seloNivel(p.nivel))));
+}
+
 export function renderResumo(alvo: HTMLElement, m: Municipio, indice: Indice): void {
-  const c = m.confirmada;
   const atual = m.previsoes.find((p) => p.antecedencia === 0);
-  const situacao = c.nivel == null
-    ? el('p', { class: 'frase' }, `Ainda não há dados confirmados suficientes para ${m.nome}.`)
-    : el('p', { class: 'frase' }, `Em ${m.nome} (${m.uf}), a dengue estava em nível `,
-      el('strong', {}, DESCRICAO_NIVEL[c.nivel]), ` na semana de ${diaMes(c.semana)}, a última com dados confirmados: ` +
-      `${SIGNIFICADO_NIVEL[c.nivel]}.`);
-  const previsto = atual == null ? null : atual.nivel === c.nivel
-    ? el('p', { class: 'frase' }, 'A previsão é de que continue assim nesta semana.')
-    : el('p', { class: 'frase' }, 'Para esta semana, a previsão é de nível ', el('strong', {}, DESCRICAO_NIVEL[atual.nivel]),
-      `: ${SIGNIFICADO_NIVEL[atual.nivel]}.`);
-  const nivel = (rotulo: string, selo: HTMLElement) => el('div', {}, el('span', { class: 'sub' }, rotulo), selo);
+  const previsto = atual == null
+    ? el('p', { class: 'frase' }, `Ainda não há previsão para ${m.nome}.`)
+    : el('div', { class: 'niveis' },
+      el('div', {}, el('span', { class: 'sub' }, 'Previsto para esta semana'), seloNivel(atual.nivel)),
+      el('p', { class: 'frase' }, el('strong', {}, `Nível ${DESCRICAO_NIVEL[atual.nivel]}`),
+        `: ${SIGNIFICADO_NIVEL[atual.nivel]}.`));
 
   alvo.replaceChildren(
-    el('p', { class: 'contexto' }, `Resumo em linguagem simples. Dados até a semana de ${periodoSemana(m.semana_atual)}; ` +
+    el('section', { class: 'card largo resumo' }, el('h3', {}, `Como está a dengue em ${m.nome} (${m.uf})`),
+      previsto,
+      el('p', { class: 'nota' }, 'O nível desta semana já é uma previsão, porque as notificações levam semanas para chegar.')),
+    el('p', { class: 'contexto' }, `Dados até a semana de ${periodoSemana(m.semana_atual)}; ` +
       `atualizado em ${indice.gerado_em.split(' ')[0].split('-').reverse().join('/')}.`),
-    el('section', { class: 'card largo resumo' }, el('h3', {}, 'Como está a dengue'),
-      el('div', { class: 'niveis' },
-        nivel(`Confirmado (semana de ${diaMes(c.semana)})`, seloNivel(c.nivel)),
-        atual != null && nivel('Previsto para esta semana', seloNivel(atual.nivel))),
-      situacao, previsto,
-      el('p', { class: 'nota' }, 'Os dados confirmados são de 2 semanas atrás porque as notificações levam semanas para chegar.')),
     el('section', { class: 'card largo resumo' }, el('h3', {}, 'Próximas semanas'),
+      semanas(m),
       el('p', { class: 'frase' }, fraseAlerta(m)),
-      fraseTendencia(m),
-      el('p', { class: 'nota' }, 'Previsões experimentais, de um trabalho acadêmico: não substituem as orientações da ' +
-        'Secretaria de Saúde do seu município.')),
+      fraseTendencia(m)),
     el('section', { class: 'card largo resumo texto' }, el('h3', {}, 'O que você pode fazer'),
       el('ul', {},
         el('li', {}, 'Retire ou esvazie recipientes que possam acumular água e virar criadouro do mosquito.'),
@@ -77,5 +78,7 @@ export function renderResumo(alvo: HTMLElement, m: Municipio, indice: Indice): v
       el('p', { class: 'nota' }, 'Fonte: Ministério da Saúde, ',
         el('a', { href: FONTE_CUIDADOS, target: '_blank', rel: 'noopener' }, 'página Dengue'), '.')),
     el('p', {}, el('a', { href: `#/indicadores/${m.id}` }, 'Ver detalhes do município (Indicadores) →')),
+    el('p', { class: 'nota' }, 'Previsões experimentais, de um trabalho acadêmico: não substituem as orientações da ' +
+      'Secretaria de Saúde do seu município.'),
   );
 }

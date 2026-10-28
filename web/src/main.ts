@@ -27,17 +27,19 @@ function irPara(secao: Secao, municipio: string) {
 }
 
 function seletor(indice: Indice, atual: string, secao: Secao): HTMLElement {
+  // Resumo (público leigo): sem a marca dos municípios de teste, que só interessa à avaliação do modelo
+  const leigo = secao === 'resumo';
   const porUf = new Map<string, Indice['municipios']>();
   for (const m of [...indice.municipios].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))) {
     porUf.set(m.uf, [...(porUf.get(m.uf) ?? []), m]);
   }
   const select = el('select', { id: 'municipio' },
     ...[...porUf.keys()].sort().map((uf) => el('optgroup', { label: uf },
-      ...porUf.get(uf)!.map((m) => el('option', { value: m.id }, m.papel === 'validacao' ? `${m.nome} *` : m.nome)))));
+      ...porUf.get(uf)!.map((m) => el('option', { value: m.id }, m.papel === 'validacao' && !leigo ? `${m.nome} *` : m.nome)))));
   select.value = atual;
   select.addEventListener('change', () => irPara(secao, select.value));
   return el('div', { class: 'seletor' }, el('label', {}, 'Município ', select),
-    el('span', { class: 'nota' }, '* município do conjunto de teste: não usado no treino do modelo'));
+    !leigo && el('span', { class: 'nota' }, '* município do conjunto de teste: não usado no treino do modelo'));
 }
 
 function cabecalho(secao: Secao, municipio: string): HTMLElement {

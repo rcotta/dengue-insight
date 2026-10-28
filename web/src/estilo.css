@@ -167,6 +167,15 @@ table.previsoes.vertical .selo { font-size: 0.8rem; padding: 2px 8px; gap: 4px; 
 .resumo .frase { font-size: 1.1rem; }
 .resumo .tendencia { display: flex; align-items: baseline; gap: 10px; font-size: 1.05rem; }
 .resumo .seta { font-size: 1.6rem; line-height: 1; color: var(--tinta-sec); }
+.resumo .niveis .frase { margin: 0; align-self: flex-end; }
+.resumo .semanas { list-style: none; padding: 0; margin: 4px 0 16px; display: grid; gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+.resumo .semana { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 12px;
+  border: 1px solid var(--borda); border-top-width: 6px; border-radius: 8px; }
+.resumo .semana.verde { border-top-color: var(--verde); }
+.resumo .semana.amarelo { border-top-color: var(--amarelo); }
+.resumo .semana.vermelho { border-top-color: var(--vermelho); }
+.resumo .semana .quando { font-weight: 600; }
 a { color: var(--azul); }
 
 .texto ul { padding-left: 20px; }
